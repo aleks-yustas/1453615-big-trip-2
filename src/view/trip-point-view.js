@@ -1,8 +1,8 @@
-import {createElement} from '../render.js';
-import {dateFormatters, formatTimeDuration} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view';
+import {dateFormatters, formatTimeDuration} from '../utils';
 
 function createTripPointTemplate(point, offers, destinations) {
-  const { basePrice, dateFrom, dateTo, isFavorite, type } = point;
+  const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
   const destinationName = destinations.find((destinationItem) => destinationItem.id === point.destination).name;
   const typeOffers = offers.find((offerItem) => offerItem.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
@@ -77,26 +77,28 @@ function createTripPointTemplate(point, offers, destinations) {
   );
 }
 
-export default class TripPointView {
-  constructor(point, offers, destinations) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+export default class TripPointView extends AbstractView {
+  #point = [];
+  #offers = [];
+  #destinations = [];
+  #handleExpandClick = null;
+
+  constructor({point, offers, destinations, onExpandClick}) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#handleExpandClick = onExpandClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#expandClickHandler);
   }
 
-  getTemplate() {
-    return createTripPointTemplate(this.point, this.offers, this.destinations);
+  get template() {
+    return createTripPointTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #expandClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleExpandClick();
+  };
 }

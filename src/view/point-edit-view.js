@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view';
 import {OFFER_TYPES} from '../const.js';
 import {dateFormatters} from '../utils.js';
 
@@ -157,26 +157,36 @@ function createPointEditTemplate(point, offers, destinations) {
   );
 }
 
-export default class PointEditView {
-  constructor(point, offers, destinations) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+export default class PointEditView extends AbstractView {
+  #point = [];
+  #offers = [];
+  #destinations = [];
+  #handleFormSubmit = null;
+  #handleCollapseClick = null;
+
+  constructor({point, offers, destinations, onFormSubmit, onCollapseClick}) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleCollapseClick = onCollapseClick;
+
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#collapseClickHandler);
   }
 
-  getTemplate() {
-    return createPointEditTemplate(this.point, this.offers, this.destinations);
+  get template() {
+    return createPointEditTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #collapseClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleCollapseClick();
+  };
 }
