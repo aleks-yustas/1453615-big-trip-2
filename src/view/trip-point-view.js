@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view'
+import AbstractView from '../framework/view/abstract-view';
 import {dateFormatters, formatTimeDuration} from '../utils';
 
 function createTripPointTemplate(point, offers, destinations) {
@@ -78,14 +78,27 @@ function createTripPointTemplate(point, offers, destinations) {
 }
 
 export default class TripPointView extends AbstractView {
-  constructor(point, offers, destinations) {
+  #point = [];
+  #offers = [];
+  #destinations = [];
+  #handleExpandClick = null;
+
+  constructor({point, offers, destinations, onExpandClick}) {
     super();
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#handleExpandClick = onExpandClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#expandClickHandler);
   }
 
   get template() {
-    return createTripPointTemplate(this.point, this.offers, this.destinations);
+    return createTripPointTemplate(this.#point, this.#offers, this.#destinations);
   }
+
+  #expandClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleExpandClick();
+  };
 }
