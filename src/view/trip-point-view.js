@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view'
 import {dateFormatters, formatTimeDuration} from '../utils';
 
 function createTripPointTemplate(point, offers, destinations) {
-  const { basePrice, dateFrom, dateTo, isFavorite, type } = point;
+  const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
   const destinationName = destinations.find((destinationItem) => destinationItem.id === point.destination).name;
   const typeOffers = offers.find((offerItem) => offerItem.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
