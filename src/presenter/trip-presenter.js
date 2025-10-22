@@ -1,4 +1,4 @@
-import { render } from '../render';
+import {render} from '../framework/render';
 import EventsListView from '../view/events-list-view';
 import SortingView from '../view/sorting-view';
 import PointEditView from '../view/point-edit-view';
@@ -19,10 +19,10 @@ export default class TripPresenter {
 
     render(new SortingView(), this.tripContainer);
     render(this.eventsListComponent, this.tripContainer);
-    render(new PointEditView(tripPoints[0], offers, destinations), this.eventsListComponent.getElement());
+    render(new PointEditView(tripPoints[0], offers, destinations), this.eventsListComponent.element);
 
     for (let i = 1; i <= 3; i++) {
-      render(new TripPointView(tripPoints[i], offers, destinations), this.eventsListComponent.getElement());
+      render(new TripPointView(tripPoints[i], offers, destinations), this.eventsListComponent.element);
     }
   }
 }
